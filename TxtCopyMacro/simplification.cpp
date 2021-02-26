@@ -29,14 +29,14 @@ class simplification
             std::cout << "파일을 찾을 수 없습니다!" << std::endl;
         }
 
-        std::string buf;
+        char buf[100];
         int count = 0;
         std::string str;
         std::smatch match;
         while (true) 
         {
             if(f.eof()) break;
-            std::getline(f, buf);
+            f.getline(buf, 100);
             str = buf;
             if(std::regex_search(str, match, wordRegex))
             {
