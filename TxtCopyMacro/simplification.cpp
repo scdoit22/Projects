@@ -19,7 +19,7 @@ class simplification
         chapterRegex = "[A-Z] [가-힣]+( [가-힣]*)*";
         wordRegex = "•[a-z ]*";
     }
-    void input()
+    void Input()
     {
         std::ifstream f;
         f.open("D:\\Programming\\DB\\XiBasicVoca.txt", std::ios::in);
@@ -28,52 +28,51 @@ class simplification
         {
             std::cout << "파일을 찾을 수 없습니다!" << std::endl;
         }
-
-        char buf[100];
+        std::string buf;
         int count = 0;
-        std::string str;
         std::smatch match;
-        while (true) 
+        while (!f.eof()) 
         {
-            if(f.eof()) break;
-            f.getline(buf, 100);
-            str = buf;
-            if(std::regex_search(str, match, wordRegex))
+            std::getline(f, buf);
+            if(std::regex_search(buf, match, wordRegex))
             {
-                str = buf;
-                output.push_back(match.str());
-                std::cout << match.str() << "\n";
+                buf = match.str();
+                buf.erase(0,3);
+                output.push_back(buf);
+                std::cout << buf << "\n";
             }
-            else if(std::regex_search(str, chapterRegex))
+            else if(std::regex_search(buf, chapterRegex))
             {
-                str = str[0];
-                str += std::to_string(count);
-                output.push_back(str);
-                std::cout << str << std::endl;;
+                buf = buf[0];
+                buf += std::to_string(count);
+                output.push_back(buf);
+                std::cout << buf << std::endl;;
                 ++count;
             }
             
         }
         f.close();
+    }   
+    void Output()
+    {
+        std::ofstream f;
+        f.open("D:\\Programming\\C++\\Projects\\TxtCopyMacro\\simple.txt");
+        std::string tmp;
+        for(int i = 0; i < output.size(); ++i)
+        {
+            tmp = output[i];
+            if (i != output.size() - 1)
+            {
+                tmp += "\n";    //마지막 단어 빼고 엔터 넣어주기
+            }
+            f.write(tmp.c_str(), tmp.size());
+        }
     }
-    // void wordCollect()
-    // {
-    //     chapter[0] += 1;
-    //     chapterRegex = strcat(chapter," [0-9]{2}");
-    //     while(f)
-    //     {   
-    //         f.getline(buf, 100);
-    //          if(std::regex_match(buf, chapterRegex))
-    //         {
-    //             break;
-    //         }
-    //     }
-    //     f.close();
-    // }
 };
 int main(void)
 {
     simplification si;
-    si.input();
+    si.Input();
+    si.Output();
     return 0;
 }
